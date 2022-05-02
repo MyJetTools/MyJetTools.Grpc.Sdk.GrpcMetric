@@ -22,7 +22,7 @@ public class PrometheusMetricsInterceptor : Interceptor
 
     #region ServerMetrics
 
-    private static readonly Gauge ServerGrpcCallProcessCount = "grpc_server_call_delay_sec"
+    private static readonly Gauge ServerGrpcCallProcessCount = "grpc_server_active_call_count"
         .CreateGauge("Counter of active calls of grpc methods.", "host", "controller", "method");
 
     private static readonly Counter ServerGrpcCallOutCount = "grpc_server_call_out_count"

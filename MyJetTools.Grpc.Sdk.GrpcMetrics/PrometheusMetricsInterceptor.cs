@@ -63,7 +63,7 @@ public class PrometheusMetricsInterceptor : Interceptor
         ServerCallContext context,
         UnaryServerMethod<TRequest, TResponse> continuation)
     {
-        var method = context.Method;
+        var method = context.Method ?? "MethodNotFound";
         var prm = context.Method.Split('/');
         var controller = prm.Length >= 2 ? prm[1] : "unknown";
 
@@ -106,8 +106,8 @@ public class PrometheusMetricsInterceptor : Interceptor
         ClientInterceptorContext<TRequest, TResponse> context,
         BlockingUnaryCallContinuation<TRequest, TResponse> continuation)
     {
-        var method = context.Method.Name;
-        var controller = context.Method.ServiceName;
+        var method = context.Method.Name ?? "MethodNotFound";
+        var controller = context.Method.ServiceName ?? "MethodNotFound";
 
         context.Options.Headers?.Add(GrpcSourceAppNameHeader, AppName);
         context.Options.Headers?.Add(GrpcSourceAppVersionHeader, AppVersion);

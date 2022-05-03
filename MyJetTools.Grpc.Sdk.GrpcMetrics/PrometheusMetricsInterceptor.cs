@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Reflection;
 using System.Text.Json;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
@@ -21,6 +22,21 @@ public class PrometheusMetricsInterceptor : Interceptor
     public const string GrpcSourceAppHostHeader = "source-app-name";
 
     #region ServerMetrics
+    
+    
+    static PrometheusMetricsInterceptor()
+    {
+        var name = Assembly.GetEntryAssembly()?.GetName();
+
+        AppName = name?.Name ?? "--none--";
+        AppVersion = name?.Version?.ToString() ?? "Not Found";
+            
+        HostName = Environment.GetEnvironmentVariable("HOST") 
+                   ?? Environment.GetEnvironmentVariable("HOSTNAME") 
+                   ?? AppName;
+
+        AppHost = HostName;
+    }
 
     private static readonly Gauge ServerGrpcCallProcessCount = "grpc_server_active_call_count"
         .CreateGauge("Counter of active calls of grpc methods.", "host", "controller", "method");
